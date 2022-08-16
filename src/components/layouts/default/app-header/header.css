@@ -1,0 +1,226 @@
+.header {
+  position: relative;
+  box-shadow: 0px 2px 6px rgb(70 93 122 / 8%);
+  z-index: 3;
+}
+.header__inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 80px;
+  padding: 30px 0;
+  justify-content: space-between;
+  background-color: #fff;
+}
+/* left */
+.header__left {
+  max-width: 50%;
+  width: 100%;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+}
+.logo {
+  max-width: 70px;
+  width: 100%;
+  max-height: 70px;
+  margin-right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo img {
+  width: 100%;
+  -o-object-fit: contain;
+  object-fit: contain;
+}
+.header__menu {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.header__menu-item {
+  margin-right: 20px;
+  font-weight: 700;
+  color: #95abc6;
+  position: relative;
+  line-height: 26px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.header__menu-item.active {
+  color: #008ae4;
+}
+.header__menu-link.router-link-exact-active::before {
+  content: "";
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #008ae4;
+  text-align: center;
+}
+/* right */
+.header__right {
+  max-width: 50%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.header__search {
+  max-width: 200px;
+  width: 100%;
+  margin-right: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5ecf5;
+  border-radius: 10px;
+  background-color: white;
+}
+.input__block-prepend {
+  display: flex;
+  align-items: center;
+}
+.header__search img {
+  margin-left: 20px;
+}
+.input__block-input input {
+  border-radius: 10px;
+  width: 100%;
+  height: 50px;
+  font-size: 18px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.input__block-input input::placeholder {
+  color: #95abc6;
+  font-size: 18px;
+  line-height: 17px;
+}
+/* auth */
+.header__auth {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+.header__auth .a-btn {
+  font-weight: 600;
+  padding: 0 30px;
+  border-radius: 10px;
+  height: 50px;
+  line-height: 50px;
+  color: white;
+  font-family: inherit;
+  position: relative;
+  text-align: center;
+  transition: transform 0.15s ease-out;
+  cursor: pointer;
+  transform: scale(1);
+}
+.header__auth .header__login {
+  background: linear-gradient(279.37deg, #008ae4 0%, #a6dcff 158.68%);
+  margin-right: 10px;
+}
+.header__auth .header__register {
+  background: linear-gradient(278.92deg, #00d06c -7.77%, #a6ffdf 158.52%);
+}
+.a-btn:active {
+  transform: scale(0.94);
+}
+/* language */
+.header__language {
+  position: relative;
+}
+.header__language-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  border: 1px solid #e5ecf5;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.header__dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0%;
+  padding-top: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: transform 0.2s ease, opacity 0.2s ease, visibility 0.2s ease;
+}
+.header__dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0px);
+  transition: transform 0.2s ease, opacity 0.2s ease, visibility 0.2s ease;
+}
+.header__dropdown-wrap {
+  background-color: white;
+  width: 140px;
+  border: 1px solid #e5ecf5 !important;
+  box-shadow: 0 8px 20px rgb(70 93 122 / 8%);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.header__dropdown-item {
+  cursor: pointer;
+}
+.header__dropdown-link {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  color: #000;
+}
+.header__dropdown-link span {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+}
+.header__dropdown-link:hover {
+  background-color: #008ae4;
+  color: white;
+}
+@media (max-width: 1401px) {
+  .logo {
+    margin-right: 20px;
+  }
+  .header__left {
+    max-width: unset;
+    width: unset;
+    padding-right: 10px;
+  }
+  .header__right {
+    max-width: unset;
+    width: unset;
+  }
+  .header__menu {
+    display: none;
+  }
+  .header__menu-item {
+    margin-right: 10px;
+  }
+}
+@media (max-width: 768px) {
+  .header__auth {
+    display: none;
+  }
+  .header__inner {
+    padding: 10px 0;
+  }
+}
+@media (max-width: 576px) {
+  .header__search {
+    display: none;
+  }
+}
