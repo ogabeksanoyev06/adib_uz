@@ -1,12 +1,15 @@
 <template>
-  <router-link :to="{ name: 'category-detail', params: { id: modules.id } }">
-    <div class="module-item">
+  <router-link
+    class="module-item"
+    :to="{ name: 'category-detail', params: { id: modules.id } }"
+  >
+    <div>
       <div class="module-item__img">
         <img src="" alt="" />
       </div>
       <div class="module-item__content">
-        <p class="module-item__title">{{ modules.title }}</p>
-        <p class="module-item__text">{{ modules.text }}</p>
+        <p class="module-item__title">{{ modules.name }}</p>
+        <p class="module-item__text"></p>
       </div>
     </div>
   </router-link>

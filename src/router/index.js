@@ -14,7 +14,7 @@ const routes = [
         component: () => import("@/views/home"),
       },
       {
-        path: "/category",
+        path: "category",
         name: "category",
         component: () => import("@/views/categories"),
       },
@@ -25,19 +25,30 @@ const routes = [
         props: true,
       },
       {
-        path: "/news",
+        path: "news",
         name: "news",
-        component: () => import("@/views/news"),
+        component: () => import("@/views/news/news.vue"),
       },
       {
-        path: "/about",
+        path: "news-content/:news_id",
+        name: "news-content",
+        component: () => import("@/views/news/detailed-page.vue"),
+      },
+      {
+        path: "about",
         name: "about",
         component: () => import("@/views/about"),
       },
       {
-        path: "/contact",
+        path: "contact",
         name: "contact",
         component: () => import("@/views/contacts"),
+      },
+      {
+        path: "scien-tists/:scientists_id",
+        name: "scien-tists",
+        component: () => import("@/views/scien-tists/detailed-page.vue"),
+        props: true,
       },
     ],
   },

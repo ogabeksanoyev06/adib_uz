@@ -1,53 +1,47 @@
+// moduleni ichidagi page
 <template>
-  <div style="padding: 30px 0" class="category">
+  <div style="padding: 30px 0" class="category" v-if="product">
     <div class="container">
       <div class="category__title">Xalq og‘zaki ijodi.</div>
-      <div class="app-slider">
-        <div class="splide" ref="slider">
-          <div class="splide__slider">
-            <div class="splide__track">
-              <div class="splide__list">
-                <div
-                  v-for="(item, idx) in list"
-                  :key="idx"
-                  class="splide__slide"
-                  :class="activeIdx === idx ? 'activeX' : ''"
-                  @click="setActive(idx)"
-                >
-                  <span>{{ item.category }}</span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              class="app-slider__button-previous"
-              key="1"
-              @click="previous"
-            >
-              <img src="/icons/angle-left.svg" alt="" />
-            </button>
-            <button class="app-slider__button-next" key="2" @click="next">
-              <img src="/icons/angle-right.svg" alt="" />
-            </button>
+      <app-slider :list="product.art">
+        <template #default="{ item }">
+          <div
+            class="list__item"
+            :class="activeIdx === item.id ? 'activeX' : ''"
+            @click="setActive(item.id)"
+          >
+            <span>{{ item.name }}</span>
           </div>
-        </div>
-      </div>
+        </template>
+      </app-slider>
+      <app-loader v-if="loading" />
       <div class="category__items">
-        <div class="category__item" v-for="(item, i) in products" :key="i">
+        <div
+          class="category__item"
+          v-for="(item, i) in product.art[0].partys"
+          :key="i"
+        >
           <div class="category__item-img">
-            <img src="/images/post.jpg" alt="" />
+            <img
+              :src="'http://api.uzbekliterature.uz' + item.img"
+              alt="photo"
+              v-if="item.img !== ''"
+            />
+            <img src="/images/post.jpg" alt="" v-else />
           </div>
           <div class="category__item-content">
             <div class="category__item-title">
-              <span> Lorem ipsum dolor sit amet. </span>
+              <span> {{ item.name }}</span>
             </div>
             <div class="category__item-text">
-              <span>
-                {{ sliceText(item.info) }}
-              </span>
+              <!-- <span> text </span> -->
             </div>
             <div class="category__item-btn">
-              <button class="category__download-btn" @click="onClick()">
+              <button
+                class="category__download-btn"
+                @click="onClick()"
+                :class="btnLoading ? 'disabled' : ''"
+              >
                 <div class="d-flex align-items-center">
                   <img src="/icons/document.svg" alt="" />
                   <span v-if="!btnLoading"> Yuklab olish </span>
@@ -61,42 +55,58 @@
                   aria-hidden="true"
                 ></span>
               </button>
-              <button class="category__more-btn" @click="infoModal">
+              <button class="category__more-btn" @click="infoModal(item.name)">
                 <span>Batafsil</span>
               </button>
             </div>
           </div>
+          <app-modal v-if="isModal" @close="closeModal">
+            <div class="modal__wrap">
+              <div class="modal__body">
+                <div class="modal__body-info">
+                  <p class="modal__body-title">Janr:</p>
+                  <p class="modal__body-text">{{ infoModalId.genre }}</p>
+                </div>
+                <div class="modal__body-info">
+                  <p class="modal__body-title">Muallif:</p>
+                  <p class="modal__body-text">{{ infoModalId.author[0] }}</p>
+                </div>
+                <div class="modal__body-info">
+                  <p class="modal__body-title">Nomi:</p>
+                  <p class="modal__body-text">{{ infoModalId.name }}</p>
+                </div>
+                <div>
+                  <p class="modal__body-text">
+                    {{ infoModalId.name }}
+                  </p>
+                  <p class="modal__body-text"></p>
+                </div>
+              </div>
+            </div>
+          </app-modal>
         </div>
       </div>
     </div>
-    <app-modal v-if="isModal" @close="closeModal">
-      <div class="modal__wrap">
-        <div class="modal__body">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti in
-          saepe vel vitae architecto, beatae ullam aliquam doloremque. Corporis
-          nulla cupiditate nemo nihil alias autem architecto perspiciatis enim,
-          facere iure.
-        </div>
-      </div>
-    </app-modal>
   </div>
 </template>
 <script>
 import "./style.css";
-const SplideJS = () => import("@splidejs/splide");
-import "@splidejs/splide/dist/css/splide-core.min.css";
 import AppModal from "@/components/shared-components/AppModal.vue";
+import AppLoader from "@/components/shared-components/AppLoader.vue";
 import axios from "axios";
+import { mapActions, mapGetters, mapState } from "vuex";
+import AppSlider from "@/components/shared-components/AppSlider.vue";
 export default {
   name: "detailed-page",
-  components: { AppModal },
+  components: { AppModal, AppLoader, AppSlider },
   data() {
     return {
+      product: null,
       isModal: false,
       btnLoading: false,
       cardsSlider: null,
+      infoModalId: null,
       activeIdx: 0,
-      products: [],
       list: [
         {
           id: 0,
@@ -132,6 +142,8 @@ export default {
     },
   },
   computed: {
+    ...mapState([""]),
+    ...mapGetters(["loading", "sections"]),
     count() {
       return this.slideCount;
     },
@@ -165,8 +177,29 @@ export default {
     },
   },
   methods: {
-    infoModal() {
-      this.isModal = true;
+    getProduct() {
+      this.$route.params.id;
+      axios
+        .get(`http://api.uzbekliterature.uz/api/davr/${this.$route.params.id}/`)
+        .then((res) => {
+          if (res.data) {
+            this.product = res.data;
+            console.log(this.product.art[0].partys);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    ...mapActions(["getSections", "setLoading"]),
+    infoModal(name) {
+      this.product.art[0].partys.forEach((element) => {
+        if (name === element.name) {
+          this.isModal = true;
+          this.infoModalId = element;
+          console.log(this.infoModalId);
+        }
+      });
     },
     closeModal() {
       this.isModal = false;
@@ -174,7 +207,7 @@ export default {
     onClick() {
       this.btnLoading = true;
       axios({
-        url: "https://adibuz.herokuapp.com/media/files/57d67edf6aceda3f5120bc08d36ed9144166957e.pdf",
+        url: "http://api.uzbekliterature.uz/media/files/538071.pdf",
         method: "GET",
         responseType: "blob",
       })
@@ -191,32 +224,6 @@ export default {
           console.log(error);
         });
     },
-    checkArrows(idx) {
-      this.showPreviousArrow = idx > 0;
-      this.showNextArrow = this.count - 1 < this.list.length - 1;
-    },
-    next() {
-      if (this.cardsSlider) {
-        this.cardsSlider.go("+1");
-      }
-    },
-    previous() {
-      if (this.cardsSlider) {
-        this.cardsSlider.go("-1");
-      }
-    },
-    async init() {
-      const refSlider = this.$refs["slider"];
-      const Splide = await SplideJS();
-      const slider = new Splide.default(refSlider, this.options);
-      slider.mount();
-      this.checkArrows(0);
-      slider.on("move", (newIndex) => {
-        this.checkArrows(newIndex);
-        this.$emit("select", { index: newIndex });
-      });
-      this.cardsSlider = slider;
-    },
     // page function
     setActive(idx) {
       this.activeIdx = idx;
@@ -230,24 +237,11 @@ export default {
     },
   },
   mounted() {
-    this.init();
-    axios.get("https://adibuz.herokuapp.com/api/ertak/").then((res) => {
-      this.products = res.data;
-      console.log(this.products);
-    });
+    this.getSections();
+    this.getProduct();
+    console.log(this.$route.params.id);
   },
-  watch: {
-    list() {
-      this.init();
-    },
-  },
-  beforeDestroy() {
-    if (this.cardsSlider) {
-      const cardsSlider = this.cardsSlider;
-      setTimeout(() => {
-        cardsSlider.destroy();
-      }, 150);
-    }
-  },
+  watch: {},
+  beforeDestroy() {},
 };
 </script>

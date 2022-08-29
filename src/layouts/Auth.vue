@@ -12,7 +12,7 @@
           </div>
           <RouterView />
           <div class="auth__footer">
-            <p>Copyright © 2022 Covid testing platforma</p>
+            <p>Copyright © 2022 Adib.uz platforma</p>
           </div>
         </div>
       </div>
