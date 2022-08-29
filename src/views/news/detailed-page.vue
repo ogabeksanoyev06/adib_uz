@@ -4,7 +4,7 @@
       <div class="news__content">
         <div class="news__item">
           <div class="news__item-photo">
-            <img src="/images/post.jpg" alt="" />
+            <img src="/images/news.jpg" alt="" />
           </div>
           <div class="news__item-content">
             <div class="content-title">ERKIN VA FAROVON HAYOTIMIZ GAROVI</div>
